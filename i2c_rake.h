@@ -35,3 +35,4 @@ void I2C_ByteWrite (u8 I2C_Slave_Address, u8 iData)
   while(!I2C_CheckEvent(I2C_EVENT_MASTER_BYTE_TRANSMITTED));
   I2C_GenerateSTOP(ENABLE);
 }
+

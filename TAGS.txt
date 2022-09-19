@@ -3890,7 +3890,7 @@ __STM8S_UART4_H	stm8s_stdperiph_driver\inc\stm8s_uart4.h	30;"	macro
 __STM8S_WWDG_H	stm8s_stdperiph_driver\inc\stm8s_wwdg.h	30;"	macro
 _stext	stm8_interrupt_vector.c	20;"	prototype	file:
 _vectab	stm8_interrupt_vector.c	22;"	variable
-assert_failed	main.c	40;"	function	signature:(uint8_t* file, uint32_t line)
+assert_failed	main.c	44;"	function	signature:(uint8_t* file, uint32_t line)
 assert_failed	stm8s_stdperiph_driver\inc\stm8s_conf.h	108;"	prototype	signature:(uint8_t* file, uint32_t line)
 assert_param	stm8s_stdperiph_driver\inc\stm8s_conf.h	106;"	macro
 assert_param	stm8s_stdperiph_driver\inc\stm8s_conf.h	110;"	macro

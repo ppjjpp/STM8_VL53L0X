@@ -164,22 +164,22 @@
  535                     .const:	section	.text
  536  0000               L22:
  537  0000 000f4240      	dc.l	1000000
- 538                     ; 17 void main(void)
- 538                     ; 18 {
+ 538                     ; 16 void main(void)
+ 538                     ; 17 {
  539                     	switch	.text
  540  00c1               _main:
- 544                     ; 19 	GPIO_DeInit(GPIOD);
+ 544                     ; 18 	GPIO_DeInit(GPIOD);
  546  00c1 ae500f        	ldw	x,#20495
  547  00c4 cd0000        	call	_GPIO_DeInit
- 549                     ; 20 	GPIO_Init(LED_GPIO_PORT,LED_GPIO_PIN,GPIO_MODE_OUT_PP_LOW_SLOW);
+ 549                     ; 19 	GPIO_Init(LED_GPIO_PORT,LED_GPIO_PIN,GPIO_MODE_OUT_PP_LOW_SLOW);
  551  00c7 4bc0          	push	#192
  552  00c9 4b08          	push	#8
  553  00cb ae500f        	ldw	x,#20495
  554  00ce cd0000        	call	_GPIO_Init
  556  00d1 85            	popw	x
- 557                     ; 21 	I2C_DeInit();
+ 557                     ; 20 	I2C_DeInit();
  559  00d2 cd0000        	call	_I2C_DeInit
- 561                     ; 23 	I2C_Init(I2C_SPEED, VL53L0X_ADDRESS, I2C_DUTYCYCLE_2, I2C_ACK_CURR, I2C_ADDMODE_7BIT, (CLK_GetClockFreq() / 1000000));
+ 561                     ; 22 	I2C_Init(I2C_SPEED, VL53L0X_ADDRESS, I2C_DUTYCYCLE_2, I2C_ACK_CURR, I2C_ADDMODE_7BIT, (CLK_GetClockFreq()/1000000));
  563  00d5 cd0000        	call	_CLK_GetClockFreq
  565  00d8 ae0000        	ldw	x,#L22
  566  00db cd0000        	call	c_ludv
@@ -197,67 +197,64 @@
  579  00f3 cd0000        	call	_I2C_Init
  581  00f6 5b0a          	addw	sp,#10
  582  00f8               L752:
- 583                     ; 27 		if (pResult = I2C_ByteRead(VL53L0X_ADDRESS, VL53L0X_EXPECTED_DEVICE_ID_ADRESS) == VL53L0X_EXPECTED_DEVICE_ID)
+ 583                     ; 26 		pResult = I2C_ByteRead(VL53L0X_ADDRESS, VL53L0X_EXPECTED_DEVICE_ID_ADRESS);
  585  00f8 ae52c0        	ldw	x,#21184
  586  00fb cd0000        	call	_I2C_ByteRead
- 588  00fe a1ee          	cp	a,#238
- 589  0100 2605          	jrne	L42
- 590  0102 ae0001        	ldw	x,#1
- 591  0105 2001          	jra	L62
- 592  0107               L42:
- 593  0107 5f            	clrw	x
- 594  0108               L62:
- 595  0108 bf00          	ldw	_pResult,x
- 596  010a be00          	ldw	x,_pResult
- 597  010c 2709          	jreq	L362
- 598                     ; 29 			GPIO_WriteHigh(LED_GPIO_PORT, LED_GPIO_PIN);
- 600  010e 4b08          	push	#8
- 601  0110 ae500f        	ldw	x,#20495
- 602  0113 cd0000        	call	_GPIO_WriteHigh
- 604  0116 84            	pop	a
- 605  0117               L362:
- 606                     ; 31 	delay(10000);
- 608  0117 ae2710        	ldw	x,#10000
- 609  011a 89            	pushw	x
- 610  011b ae0000        	ldw	x,#0
- 611  011e 89            	pushw	x
- 612  011f ad8d          	call	L312_delay
- 614  0121 5b04          	addw	sp,#4
- 616  0123 20d3          	jra	L752
- 651                     ; 44 void assert_failed(uint8_t* file, uint32_t line)
- 651                     ; 45 {
- 652                     	switch	.text
- 653  0125               _assert_failed:
- 657  0125               L303:
- 658  0125 20fe          	jra	L303
- 682                     	xdef	_main
- 683                     	switch	.ubsct
- 684  0000               _pResult:
- 685  0000 0000          	ds.b	2
- 686                     	xdef	_pResult
- 687                     	xdef	_MeasureContinuous
- 688                     	xdef	_MeasureSingleMode
- 689                     	xdef	_Init_VL53L0X
- 690                     	xdef	_I2C_ByteWrite
- 691                     	xdef	_I2C_ByteRead
- 692                     	xref	_GPIO_WriteHigh
- 693                     	xref	_GPIO_Init
- 694                     	xref	_GPIO_DeInit
- 695                     	xdef	_assert_failed
- 696                     	xref	_I2C_GetFlagStatus
- 697                     	xref	_I2C_CheckEvent
- 698                     	xref	_I2C_SendData
- 699                     	xref	_I2C_Send7bitAddress
- 700                     	xref	_I2C_ReceiveData
- 701                     	xref	_I2C_AcknowledgeConfig
- 702                     	xref	_I2C_GenerateSTOP
- 703                     	xref	_I2C_GenerateSTART
- 704                     	xref	_I2C_Init
- 705                     	xref	_I2C_DeInit
- 706                     	xref	_CLK_GetClockFreq
- 707                     	xref.b	c_lreg
- 708                     	xref.b	c_x
- 728                     	xref	c_ludv
- 729                     	xref	c_lzmp
- 730                     	xref	c_lgsbc
- 731                     	end
+ 588  00fe 5f            	clrw	x
+ 589  00ff 97            	ld	xl,a
+ 590  0100 bf00          	ldw	_pResult,x
+ 591                     ; 27 		if (pResult == VL53L0X_EXPECTED_DEVICE_ID)
+ 593  0102 be00          	ldw	x,_pResult
+ 594  0104 a300ee        	cpw	x,#238
+ 595  0107 2609          	jrne	L362
+ 596                     ; 29 			GPIO_WriteHigh(LED_GPIO_PORT, LED_GPIO_PIN);
+ 598  0109 4b08          	push	#8
+ 599  010b ae500f        	ldw	x,#20495
+ 600  010e cd0000        	call	_GPIO_WriteHigh
+ 602  0111 84            	pop	a
+ 603  0112               L362:
+ 604                     ; 31 	delay(100);
+ 606  0112 ae0064        	ldw	x,#100
+ 607  0115 89            	pushw	x
+ 608  0116 ae0000        	ldw	x,#0
+ 609  0119 89            	pushw	x
+ 610  011a ad92          	call	L312_delay
+ 612  011c 5b04          	addw	sp,#4
+ 614  011e 20d8          	jra	L752
+ 649                     ; 44 void assert_failed(uint8_t* file, uint32_t line)
+ 649                     ; 45 {
+ 650                     	switch	.text
+ 651  0120               _assert_failed:
+ 655  0120               L303:
+ 656  0120 20fe          	jra	L303
+ 680                     	xdef	_main
+ 681                     	switch	.ubsct
+ 682  0000               _pResult:
+ 683  0000 0000          	ds.b	2
+ 684                     	xdef	_pResult
+ 685                     	xdef	_MeasureContinuous
+ 686                     	xdef	_MeasureSingleMode
+ 687                     	xdef	_Init_VL53L0X
+ 688                     	xdef	_I2C_ByteWrite
+ 689                     	xdef	_I2C_ByteRead
+ 690                     	xref	_GPIO_WriteHigh
+ 691                     	xref	_GPIO_Init
+ 692                     	xref	_GPIO_DeInit
+ 693                     	xdef	_assert_failed
+ 694                     	xref	_I2C_GetFlagStatus
+ 695                     	xref	_I2C_CheckEvent
+ 696                     	xref	_I2C_SendData
+ 697                     	xref	_I2C_Send7bitAddress
+ 698                     	xref	_I2C_ReceiveData
+ 699                     	xref	_I2C_AcknowledgeConfig
+ 700                     	xref	_I2C_GenerateSTOP
+ 701                     	xref	_I2C_GenerateSTART
+ 702                     	xref	_I2C_Init
+ 703                     	xref	_I2C_DeInit
+ 704                     	xref	_CLK_GetClockFreq
+ 705                     	xref.b	c_lreg
+ 706                     	xref.b	c_x
+ 726                     	xref	c_ludv
+ 727                     	xref	c_lzmp
+ 728                     	xref	c_lgsbc
+ 729                     	end
